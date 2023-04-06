@@ -5,14 +5,14 @@ const users = []
 const tweets = []
 const app = express()
 
-app.use(cors())
+//app.use(cors())
 app.use(express.json())
 
 app.post("/sign-up", (req, res) => {
     const { username, avatar } = req.body
     console.log(req.body)
-    if (!username || !avatar) {
-        return res.status(422).send("Todos os campos devem estar preenchidos corretamente")
+    if (!username || !avatar||(typeof(username)!=="string")||(typeof(avatar)!=="string")) {
+        return res.status(400).send("Todos os campos são obrigatórios!")
     }
     users.push({ username, avatar })
     res.send("ok")
@@ -21,8 +21,8 @@ app.post("/sign-up", (req, res) => {
 app.post("/tweets", (req, res) => {
     const { username, tweet } = req.body
     const user = users.find((u) => u.username === username)
-    if (!username || !tweet) {
-        return res.status(422).send("Todos os campos devem estar preenchidos corretamente")
+    if (!username || !tweet||(typeof(username)!=="string")||(typeof(tweet)!=="string")) {
+        return res.status(400).send("Todos os campos são obrigatórios!")
     }
     if (!user) {
         return res.status(401).send("UNAUTHORIZED")
