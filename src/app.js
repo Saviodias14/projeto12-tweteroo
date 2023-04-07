@@ -5,7 +5,7 @@ const users = []
 const tweets = []
 const app = express()
 
-//app.use(cors())
+app.use(cors())
 app.use(express.json())
 
 app.post("/sign-up", (req, res) => {
@@ -15,7 +15,7 @@ app.post("/sign-up", (req, res) => {
         return res.status(400).send("Todos os campos são obrigatórios!")
     }
     users.push({ username, avatar })
-    res.send("ok")
+    res.status(201).send("ok")
 })
 
 app.post("/tweets", (req, res) => {
@@ -29,7 +29,7 @@ app.post("/tweets", (req, res) => {
     }
     let avatar = user.avatar
     tweets.push({ username, avatar, tweet })
-    res.send("ok")
+    res.status(201).send("ok")
 })
 
 app.get("/tweets", (req, res)=>{
