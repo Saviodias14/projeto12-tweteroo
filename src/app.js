@@ -19,16 +19,17 @@ app.post("/sign-up", (req, res) => {
 })
 
 app.post("/tweets", (req, res) => {
-    const { username, tweet } = req.body
-    const user = users.find((u) => u.username === username)
-    if (!username || !tweet || (typeof (username) !== "string") || (typeof (tweet) !== "string")) {
+    const { tweet } = req.body
+    const {user} = req.headers
+    const userCheck = users.find((u) => u.username === user)
+    if (!user || !tweet || (typeof (user) !== "string") || (typeof (tweet) !== "string")) {
         return res.status(400).send("Todos os campos são obrigatórios!")
     }
-    if (!user) {
+    if (!userCheck) {
         return res.status(401).send("UNAUTHORIZED")
     }
-    let avatar = user.avatar
-    tweets.push({ username, avatar, tweet })
+    let avatar = userCheck.avatar
+    tweets.push({ username:user, avatar, tweet })
     res.status(201).send("ok")
 })
 
@@ -39,7 +40,7 @@ app.get("/tweets", (req, res) => {
         const tenTweets = tweets.filter((t, i) => i >= tweets.length - 10 ? t : '')
         return res.send(tenTweets)
     }
-    if (Number(page) >= 1 && (tweets.length%10===0?Number(page)<=(tweets.length/10):Number(page)<= parseInt(tweets.length/10 +1))) {
+    if (Number(page) >= 1 && (tweets.length%10===0&&tweets.length!==0?Number(page)<=(tweets.length/10):Number(page)<= parseInt(tweets.length/10 +1))) {
         const myTweets = tweets.filter((t, i) => (i >= tweets.length - (10*page)) && (i<tweets.length - (10*(page-1))) ? t : '')
         return res.send(myTweets)
     }
