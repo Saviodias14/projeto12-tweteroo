@@ -39,11 +39,11 @@ app.get("/tweets", (req, res) => {
         const tenTweets = tweets.filter((t, i) => i >= tweets.length - 10 ? t : '')
         return res.send(tenTweets)
     }
-    if (Number(page) >= 1) {
+    if (Number(page) >= 1 && (tweets.length%10===0?Number(page)<=(tweets.length/10):Number(page)<= parseInt(tweets.length/10 +1))) {
         const myTweets = tweets.filter((t, i) => (i >= tweets.length - (10*page)) && (i<tweets.length - (10*(page-1))) ? t : '')
         return res.send(myTweets)
     }
-    
+    res.status(400).send("Informe uma página válida!")
 })
 
 app.get("/tweets/:username", (req, res) => {
